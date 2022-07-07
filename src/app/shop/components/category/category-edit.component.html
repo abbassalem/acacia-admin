@@ -1,30 +1,113 @@
-<mat-card>
-    
-    <mat-card-header>
-        <mat-card-subtitle>New Category
-        </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="categoryForm">
-        <p>
-          <mat-form-field>
-            <input type="text" matInput placeholder="Category name" formControlName="name">
-          </mat-form-field>
-        </p>
-  
-        <p>
-          <mat-form-field>
-            <input type="text" matInput placeholder="Category description" formControlName="description">
-          </mat-form-field>
-        </p>
+<div class="row" style="padding: 5px">
+  <div class="col-12" >
+          
+      <mat-card-subtitle><b>Category List</b></mat-card-subtitle>
+  </div>
+                     
+           <div class="row"  *ngFor="let cat of categoryList$ | async">
+              <div class="col-10" style="margin-bottom: 3px; padding-bottom: 3px">
+                    <mat-expansion-panel >
+                        <mat-expansion-panel-header>
+                          <mat-card style="width: 100%;">                 
+                            <div class="row">
+                              <div class="col-2"><b class="field-title">Id: </b>{{cat.id}}</div> 
+                              <div class="col-4"><b class="field-title">Name: </b>{{cat.name}}</div>
+                              <div class="col-6"><b class="field-title">Description: </b>{{cat.description}}</div>
+                            </div>
+                          </mat-card>
+                         
+                        </mat-expansion-panel-header>
+                        <div class="row"  >
+                          <div class="col-2"><b class="field-title">ID</b></div> 
+                          <div class="col-3"><b class="field-title">Name</b></div>
+                          <div class="col-3"><b class="field-title">Description</b></div>
+                          <div class="col-2"><b class="field-title">Reference</b></div> 
+                          <div class="col-2"><b class="field-title">Image</b></div>
+                        </div>
+                        <div class="row"  >
+                          <div class="col-12">&nbsp;</div> 
+                        </div>
+                        <div class="row" style="border: 1px dotted grey"  *ngFor="let product of cat.products">
+                          <div class="col-2">{{product.id}}</div> 
+                          <div class="col-3">{{product.name}}</div>
+                          <div class="col-3">{{product.description}}</div>
+                          <div class="col-2">{{product.reference}}</div>
+                          <div class="col-2">{{product.image}}</div>
+                        </div>
+                  </mat-expansion-panel>
+              </div>
+              <div class="col-2" >
+                  <button mat-icon-button style="color: navy" (click)="edit(cat)"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button style="color: red" (click)="delete(cat)"> <mat-icon>cancel</mat-icon></button>
+              </div>          
+          </div>  
+</div>           
 
-        <mat-card-actions>
-            <p class="loginButtons">
-                <button mat-fab type="button" [disabled]="!categoryForm.valid" (click)="save()" mat-button>Create</button>
-              </p>
-        </mat-card-actions>
-      </form>
-    </mat-card-content>
-  
-  </mat-card>
-  
+
+<mat-toolbar>
+    <button style="float: left" [disabled]="mode === 'add' || mode ==='edit'" mat-raised-button color="primary" (click)="addNew()">New Category 
+      <mat-icon>add</mat-icon>
+    </button>
+        &nbsp;&nbsp;
+    <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right" mat-raised-button color="primary"  [disabled]="!categoryForm.valid" (click)="save()" mat-button>Save</button>
+        &nbsp;&nbsp;
+    <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right" mat-raised-button  type="button"  (click)="cancel()" mat-button>Cancel</button>
+    &nbsp;&nbsp;
+    <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right;" mat-raised-button color="secondary" (click)="addProduct()" mat-button>Add Product
+      <mat-icon>add</mat-icon>
+    </button>
+</mat-toolbar> 
+
+<div class="row">
+    <div class="col-12" *ngIf="mode === 'add' || mode ==='edit'">
+        <form [formGroup]="categoryForm">  
+        <mat-card>    
+              <mat-card-header>
+                  <!-- <mat-card-subtitle><b>New Category</b></mat-card-subtitle> -->
+              </mat-card-header>
+              <div class="row">
+                <mat-form-field class="col-3" *ngIf="mode ==='edit'">
+                    <input type="text"  matInput placeholder="Category ID" formControlName="id">
+                </mat-form-field>
+              
+                <mat-form-field class="col-3" >
+                    <input type="text" matInput placeholder="Category name" formControlName="name">
+              </mat-form-field>
+
+              <mat-form-field class="col-6" >
+                    <input type="text" matInput placeholder="Category description" formControlName="description">
+              </mat-form-field>
+            </div>
+            <div formArrayName="products" class="row">
+                <div style="overflow-y:scroll; max-height: 220px;">
+                    <mat-card class="scrolling" *ngFor="let prod of productArray.controls; let i=index;">
+                        <div [formGroupName] = "i" class="row">
+                          <mat-form-field class="col-1" *ngIf="mode === 'edit'">
+                            <input type="text" matInput value="" mat-input placeholder="Id" formControlName="id">
+                          </mat-form-field>
+                          <mat-form-field class="col-2">
+                            <input type="text" matInput placeholder="Name" formControlName="name">
+                          </mat-form-field>
+                          <mat-form-field class="col-3">
+                            <input type="text" matInput placeholder="Description" formControlName="description">
+                          </mat-form-field>
+                          <mat-form-field class="col-2">
+                            <input type="text" matInput placeholder="Reference" formControlName="reference">
+                          </mat-form-field>
+                          <mat-form-field class="col-2">
+                            <input type="text" matInput placeholder="Image Url" formControlName="image">
+                          </mat-form-field>
+                          <div class="col-2">
+                            <button mat-icon-button  (click)="removeProduct()"><mat-icon>cancel</mat-icon></button>
+                          </div>
+                        </div>
+                    </mat-card>
+                </div>
+          </div>
+
+      </mat-card>  
+  </form>
+</div>
+</div>
+
+

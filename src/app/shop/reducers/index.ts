@@ -1,5 +1,6 @@
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromRoot from '../../reducers';
+import { Category } from '../models/category.model';
 import * as fromCategories from './categories.reducer';
 
 export interface ShopState {

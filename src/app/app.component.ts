@@ -11,7 +11,7 @@ import { User } from './auth/models/user';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
 <app-toolbar>
-<button *ngIf="(loggedIn$ | async)" mat-button [matMenuTriggerFor]="menu">Menu<mat-icon>menu</mat-icon></button>
+<button  mat-button [matMenuTriggerFor]="menu">Menu<mat-icon>menu</mat-icon></button>
     <mat-menu #menu="matMenu">
  
       <button mat-menu-item routerLink="/shop/categories/0">
@@ -41,7 +41,7 @@ import { User } from './auth/models/user';
 </mat-menu>
 
          <div style="flex: 1 1 auto;flex-direction: row">
-         <span class="login" *ngIf="loggedIn$ | async">
+         <span class="login" >
               <span style="padding-right: 10px;color:white">Logged as: </span> <b>{{(user$ | async)?.displayName}}</b>
           </span>
         </div>

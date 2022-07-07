@@ -30,7 +30,6 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
       return adapter.getInitialState(state);
     }
 
-    
     case CategoryActionTypes.LoadComplete: {
       state = Object.assign({ ...state, isLoaded:true});
       return adapter.addMany(action.payload, state);
@@ -84,3 +83,4 @@ export function findCategory(entities: {[id: number]: Category}, ids, productId)
   });
   return foundId;
 }
+

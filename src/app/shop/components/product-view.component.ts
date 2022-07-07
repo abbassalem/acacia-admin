@@ -1,31 +1,25 @@
 import { Component, Input } from '@angular/core';
 import { Product } from '../models/product.model';
-
+//, {queryParams: {quantity:quantity}}
 @Component({
   selector: 'app-product-view',
   template: `
       <mat-card>
-      <a [routerLink]="['/shop/products', id, {queryParams: {quantity:quantity}}]">
+      <a [routerLink]="['/shop/products', id]">
     
         <mat-card-title-group>
           <img mat-card-sm-image *ngIf="thumbnail" [src]="thumbnail"/>
           <mat-card-title class="product-title" >{{ name }}</mat-card-title>
         </mat-card-title-group>
-        
+        <span class="price" style="float: right; margin-left: 10px">£ {{ price | number : '1.2-2'}} </span>
       </a>
-        <mat-card-footer>
-        <p style="float:left" *ngIf="quantity > 0">
-          <span  [matBadge]="quantity" style="font-size:10px" matBadgeOverlap="true"></span>
-        </p>
-          <p class="price">£ {{ price | number : '1.2-2'}} </p>
-          <p class="description" *ngIf="description">{{ description }}</p>
+       <span class="description" *ngIf="description">{{ description }}</span>
+      <mat-card-actions>
           <button style="float:left: padding-botton:" color="secondary" mat-raised-button><mat-icon>edit</mat-icon>Edit</button>
-      <button style="float:right" mat-raised-button color="secondary">
-      <mat-icon>remove</mat-icon>Remove</button>
-        </mat-card-footer>
+          <button style="float:right" mat-raised-button color="secondary"><mat-icon>remove</mat-icon>Remove</button>
+      </mat-card-actions>
       </mat-card>
    
-
   `,
   styles: [
     `
@@ -38,9 +32,9 @@ import { Product } from '../models/product.model';
     }
 
     mat-card {
-      width: 300px;
+      width: 280px;
       height: 180px;
-      margin: 10px;
+      margin: 5px;
       display: flex;
       flex-flow: column;
       justify-content: space-between;
@@ -68,6 +62,7 @@ import { Product } from '../models/product.model';
       width: 60px;
       min-width: 60px;
       margin-left: 5px;
+      margin-right: 5px;
     }
     mat-card-content {
       margin-top: 15px;
@@ -86,7 +81,6 @@ import { Product } from '../models/product.model';
 export class ProductViewComponent {
   
   @Input() product: Product;
-  @Input() quantity: number;
 
   constructor() {
   }

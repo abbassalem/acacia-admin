@@ -1,0 +1,8 @@
+.field-title {
+    font-size: 12px;
+    color:burlywood;
+}
+
+.scrolling {
+    overflow-y: auto; max-height: 350px;
+}
