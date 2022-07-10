@@ -23,11 +23,11 @@ import { LargerImageDirective } from '../shared/directives/larger-image.directiv
     MaterialModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: '', redirectTo: 'categories/:id', pathMatch: 'full'},
-      { path: 'categories/:id', component: ProductListPageComponent},
-      { path: 'products/:productId', component: ProductViewPageComponent},
-      { path: 'category/new', component: CategoryEditComponent},
-      { path: 'product/new', component: ProductyEditComponent},
+      { path: '', redirectTo: 'categories', pathMatch: 'full'},
+      { path: 'categories', component: CategoryEditComponent},
+      // { path: 'categories/:id', component: ProductListPageComponent},
+      // { path: 'products/:productId', component: ProductViewPageComponent},
+      // { path: 'product/new', component: ProductyEditComponent},
     ]),
 
     StoreModule.forFeature('shop', reducers),

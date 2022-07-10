@@ -14,15 +14,15 @@ import { User } from './auth/models/user';
 <button  mat-button [matMenuTriggerFor]="menu">Menu<mat-icon>menu</mat-icon></button>
     <mat-menu #menu="matMenu">
  
-      <button mat-menu-item routerLink="/shop/categories/0">
+      <button mat-menu-item routerLink="/shop/categories">
           <mat-icon>list</mat-icon>
           Categories
       </button>
         
-      <button mat-menu-item routerLink="/shop/category/new">
+      <!-- <button mat-menu-item routerLink="/shop/category/new">
           <mat-icon>add</mat-icon>
           New Category
-      </button>
+      </button> -->
 
       <button mat-menu-item routerLink="/gallery">
           <mat-icon>list</mat-icon>
