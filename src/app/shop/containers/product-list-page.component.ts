@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import * as fromCategoryActions from '../actions/category.actions';
@@ -43,8 +43,8 @@ export class ProductListPageComponent implements OnInit {
   routeLinks: Array<RouteLink> = new Array<RouteLink>();
   categories: Array<Category>;
   categories$: BehaviorSubject<Category[]> = new BehaviorSubject(null);
-  selectedCategoryId: number;
-  currentCategoryIndex: number = 0;
+  selectedCategoryId: string;
+  currentCategoryIndex: number;
 
   constructor(private store: Store<fromCategories.CategoryState>, private route: ActivatedRoute) {
   }
@@ -57,7 +57,7 @@ export class ProductListPageComponent implements OnInit {
         cats.forEach((cat, i) => 
             this.routeLinks.push({catId: cat.id, label: cat.name, path: '/shop/categories/' + i}));
         this.selectedCategoryId  = this.routeLinks[this.currentCategoryIndex].catId;
-        this.store.dispatch(new fromCategoryActions.Select(this.selectedCategoryId))
+        this.store.dispatch(new fromCategoryActions.SelectCategory(this.selectedCategoryId))
     });
 
     this.route.paramMap.subscribe( params => {
@@ -66,20 +66,19 @@ export class ProductListPageComponent implements OnInit {
         if( this.routeLinks[this.currentCategoryIndex].catId ) {
           this.selectedCategoryId  = this.routeLinks[this.currentCategoryIndex].catId;
           console.log('selectedCategoryId router: ' + this.selectedCategoryId );
-          this.store.dispatch(new fromCategoryActions.Select(this.selectedCategoryId));
+          this.store.dispatch(new fromCategoryActions.SelectCategory(this.selectedCategoryId));
         }
     })
   }
 
   setCurrentCategoryIndex(index: number) {
-    console.log('EventEmitter catid: ' + index);
     this.currentCategoryIndex = index;
   }  
 }
 
 
 export interface RouteLink {
-  catId: number;
+  catId: string;
   label: string;
   path: string
 }

@@ -26,13 +26,6 @@ export function reducer(state = initialState, action: ProductActionsUnion): Prod
       return adapter.addMany(action.payload, state);
     }
 
-    // case ProductActionTypes.Load: {
-    //   return adapter.addOne(action.payload, {
-    //     ...state,
-    //     selectedProductId: state.selectedProductId,
-    //   });
-    // }
-
     case ProductActionTypes.Select: {
       return {
         ...state,

@@ -4,7 +4,7 @@ import { Category } from '../models/category.model';
 
 export interface CategoryState extends EntityState<Category> {
   isLoaded: boolean | null;
-  selectedCategoryId: number | null;
+  selectedCategoryId: string | null;
   selectedProductId: number | null;
 }
 
@@ -36,8 +36,14 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
     }
     
     case CategoryActionTypes.CreateCategory: {
-      return adapter.addOne(action.payload, state);
+      // return adapter.addOne(action.payload, state);
+      return state;
     }
+
+    // case CategoryActionTypes.CreateCategoryComplete: {
+    //   return state;
+    //   // addOne(action.payload, state);
+    // }
 
     case CategoryActionTypes.CreateProduct: {
       return adapter.getInitialState(state);
@@ -59,6 +65,11 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
       return adapter.addOne(action.payload, state);
     }
 
+    case CategoryActionTypes.RemoveCategory: {
+      return adapter.removeOne(action.payload, state);
+    }
+
+
     case CategoryActionTypes.Select: {
       return {...state, selectedCategoryId: action.payload};
     }
@@ -72,15 +83,15 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
   }
 }
 
-export function findCategory(entities: {[id: number]: Category}, ids, productId): number {
-  let foundId = -1;
-  const result = ids.forEach( catId => {
-     entities[catId].products.forEach( product => {
-       if (product.id === productId) {
-          foundId = catId;
-       }
-    });
-  });
-  return foundId;
-}
+// export function findCategory(entities: {[id: string]: Category}, ids, productId): number {
+//   let foundId = -1;
+//   const result = ids.forEach( catId:string => {
+//      entities[catId].products.forEach( product => {
+//        if (product.id === productId) {
+//           foundId = catId;
+//        }
+//     });
+//   });
+//   return foundId;
+// }
 

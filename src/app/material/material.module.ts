@@ -22,7 +22,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
+
 
 @NgModule({
   imports: [
@@ -50,6 +52,7 @@ import { AgGridModule } from 'ag-grid-angular';
     MatGridListModule,
     MatMenuModule,
     MatAutocompleteModule,
+    MatDialogModule,
     AgGridModule.forRoot()
   ],
   exports: [

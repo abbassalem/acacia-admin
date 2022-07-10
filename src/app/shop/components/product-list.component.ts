@@ -8,7 +8,7 @@ import { Product } from '../models/product.model';
   selector: 'app-list-product',
   template: `
   <mat-toolbar>
-  <span class="toolbar-flex">
+    <span class="toolbar-flex">
       <nav mat-tab-nav-bar [backgroundColor]="'secondary'">
         <a mat-tab-link 
             *ngFor="let routeLink of routeLinks; let i=index"

@@ -78,10 +78,7 @@ export class AuthEffects {
   fetchUsersSuccess$ =  createEffect( () => {
     return this.actions$.pipe(
         ofType<fromAuthActions.FetchedUsersComplete>(fromAuthActions.AuthActionTypes.FetchedUsersComplete),
-            switchMap( (action) => {
-              console.log('auth effect fetchUsercomplete');
-              console.dir(action.payload);
-        
+            switchMap( (action) => {   
             return of(null);
             }
       ))
@@ -107,10 +104,7 @@ export class AuthEffects {
     loadOrderUserSuccess$ =  createEffect( () => {
       return this.actions$.pipe(
           ofType<fromAuthActions.LoadOrderUserComplete>(fromAuthActions.AuthActionTypes.LoadOrderUserComplete),
-              switchMap( (action) => {
-                console.log('auth effect LoadOrderUserComplete');
-                console.dir(action.payload);
-          
+              switchMap( (action) => {     
               return of(null);
               }
         ))

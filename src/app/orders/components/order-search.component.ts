@@ -119,13 +119,9 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
       switchMap(val => of(val))
     )
       .subscribe(val => {
-        console.log('userEmail from search comp');
-        console.dir(val);
         if (typeof val === 'string') {
           this.usersForAutoChange.emit(val);
         } else {
-          console.log('selectedUser: ');
-          console.dir(val);
           this.selectedUser = val;
         }
 

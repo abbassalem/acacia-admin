@@ -1,5 +1,5 @@
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromRoot from '../../reducers';
+import * as fromRoot from '../../shared/reducers';
 import { Category } from '../models/category.model';
 import * as fromCategories from './categories.reducer';
 
@@ -31,12 +31,6 @@ export const {
   selectAll: getAllCategories,
   selectTotal: categoryCount
 } = fromCategories.adapter.getSelectors(getCategoryState);
-
-// export const {
-//   selectEntities: getCategoryEntities,
-//   selectAll: getAllCategories,
-//   selectTotal: categoryCount
-// } = fromOrder.adapter.getSelectors(getOrderState);
 
 export const getProductsForSelectedCategory = createSelector(
   getSelectedCategoryId,

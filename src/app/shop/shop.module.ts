@@ -15,6 +15,7 @@ import { reducers } from './reducers';
 import { CategoryEditComponent } from './components/category/category-edit.component';
 import { ProductyEditComponent } from './components/product/category/product-edit.component';
 import { ProductService } from './services/product.service';
+import { LargerImageDirective } from '../shared/directives/larger-image.directive';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { ProductService } from './services/product.service';
     ProductViewComponent,
     ProductDetailComponent,
     CategoryEditComponent,
-    ProductyEditComponent
+    ProductyEditComponent,
+    LargerImageDirective
   ],
   providers: [ProductService]
 })

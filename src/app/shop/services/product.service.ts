@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { Category } from '../models/category.model';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, DocumentData } from '@angular/fire/compat/firestore';
 import { map } from 'rxjs/operators';
 
 import { FIREBASE_APP_NAME } from '@angular/fire/compat';
 import { Product } from '../models/product.model';
-import { arrayRemove, arrayUnion } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, DocumentReference } from 'firebase/firestore';
 
 
 @Injectable({providedIn: 'any', useExisting: FIREBASE_APP_NAME, useValue: 'db'}
@@ -22,27 +22,30 @@ export class ProductService {
   }
 
   getCategories(): Observable<Array<Category>> {
-
     let cats: Array<Category> = new Array();
     return this.db.collection('categories').snapshotChanges().pipe(
       map( snapshot => {
-        cats = snapshot.map(action => action.payload.doc.data() as Category);
+        cats = snapshot.map(action =>{ 
+          let cat = action.payload.doc.data() as Category;
+          cat.id = action.payload.doc.id;
+          return cat;
+        });
         return cats;
       })
     )
   }
 
   createCategory(cat: Category): Observable<any> {
-
-    let p: Promise<void> = this.db.collection('categories')
-      .doc(cat.id.toString()).set({id: cat.id, name: cat.name, description: cat.description, products: []});
+    let p = this.db.collection('categories').add(cat);
     return of(p);  
   } 
 
-  createProduct(catId: number, product: Product): Observable<any> {
+  removeCategory(catId: string): Observable<any> {
+    const p = this.db.collection('categories').doc(catId).delete();
+      return of({catId: catId});
+    }
 
-    console.log('catId: ' + catId);
-    console.dir(product);
+  createProduct(catId: string, product: Product): Observable<any> {
     const p = this.db.collection('categories')
     .doc(catId.toString())
       .update({products: arrayUnion(product)});
@@ -52,19 +55,12 @@ export class ProductService {
     }
 
     removeProduct(catId: number, prodId: number): Observable<any> {
-
-      console.log('catId: ' + catId, ' prodId: ' + prodId);
       const p = this.db.collection('categories')
       .doc(catId.toString())
         .update({products: arrayRemove(prodId)});
       
         return of({catId: catId, prodId: prodId });
-      
       }
 
 }
 
-
-// return this.db.collection('categories')
-//     .doc(catId.toString()).collection('products').doc(product.id.toString())
-//       .set({... product, id: product.id });

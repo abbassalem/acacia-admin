@@ -139,8 +139,6 @@ export class OrderListComponent {
         }
     },
     getDetailRowData: (params) => {
-        console.log('getDetailRowData');
-        console.dir(params);
         params.successCallback(params.data.items);
     }, 
   };

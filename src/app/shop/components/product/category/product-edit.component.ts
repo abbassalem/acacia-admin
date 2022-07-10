@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { DbService } from 'src/app/core/services/db.service';
+import { ConfigService } from 'src/app/core/services/config.service';
 import { Product } from 'src/app/shop/models/product.model';
 import { CategoryState } from '../../../reducers/categories.reducer';
 import { CreateProduct } from './../../../actions/category.actions'
@@ -18,17 +18,17 @@ export class ProductyEditComponent implements OnInit, OnChanges {
   isVisible: boolean = false;
 
   @Input()
-  categoryId: number;
+  categoryId: string;
 
   @Output()
   close: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
-  constructor(private store: Store<CategoryState>, private dbService: DbService) {
+  constructor(private store: Store<CategoryState>, private dbService: ConfigService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dbService.getNextProductId(this.categoryId);
+    // this.dbService.getNextProductId(this.categoryId);
     this.dbService.nextProductId$.subscribe(newId => {
       this.nextProductId = newId;
       console.log('inside ngchanges nextproductId = ' + this.nextProductId);
@@ -44,11 +44,7 @@ export class ProductyEditComponent implements OnInit, OnChanges {
       reference: new UntypedFormControl('', []),
       image: new UntypedFormControl('', []),
     });
-    this.dbService.getNextProductId(this.categoryId);
-    this.dbService.nextProductId$.subscribe(newId => {
-      this.nextProductId = newId
-      console.log('nextproductId = ' + this.nextProductId);
-    });
+    
   }
 
   save() {
@@ -56,11 +52,6 @@ export class ProductyEditComponent implements OnInit, OnChanges {
     if (this.productForm.valid) {
       const newProd: Product = Object.assign(this.productForm.value,
         { id: this.nextProductId });
-
-      console.log('new product');
-      console.dir(newProd);
-      console.log('catId');
-      console.log(this.categoryId);
       this.store.dispatch(
         new CreateProduct({ catId: this.categoryId, product: newProd }));
 

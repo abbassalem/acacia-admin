@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import * as AuthActions from './auth/actions/auth.actions';
-import * as fromRoot from './reducers';
+import * as fromRoot from './shared/reducers';
 import { User } from './auth/models/user';
 
 @Component({

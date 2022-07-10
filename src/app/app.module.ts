@@ -13,15 +13,15 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { ConfigEffects } from './core/effects/configuration.effects';
-import { ConfigService } from './core/services/config.service';
-import { metaReducers, reducers } from './reducers';
+import { metaReducers, reducers } from './shared/reducers';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { AngularFireModule, FIREBASE_APP_NAME } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AuthModule } from './auth/auth.module';
-import { DbService } from './core/services/db.service';
+import { ConfigService } from './core/services/config.service';
 import { AppRoutingModule } from 'app-routing.module';
+import { LargerImageDirective } from './shared/directives/larger-image.directive';
 
 @NgModule({
   imports: [
@@ -48,7 +48,7 @@ import { AppRoutingModule } from 'app-routing.module';
     CoreModule.forRoot(),
     AuthModule.forRoot()
   ],
-  providers: [ConfigService, DbService,
+  providers: [ConfigService, ConfigService,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 4000}},
     {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
@@ -57,9 +57,6 @@ import { AppRoutingModule } from 'app-routing.module';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],
-  declarations: [
-  
-  ]
 })
 export class AppModule {}
 
