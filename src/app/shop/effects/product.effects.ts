@@ -35,7 +35,7 @@ export class ProductEffects {
     return this.actions$.pipe(
       ofType<fromCategoryActions.LoadComplete>(fromCategoryActions.CategoryActionTypes.LoadComplete),
       map(action =>
-        console.dir('getAllCategoriesSuccess')
+        console.dir('getAllCategoriesSuccess - LOADED ALL')
         // this.snackBar.open(`[${action.payload.length}] categories loaded successfully.`, 'Close',{
         //     duration: 2000,
         //     panelClass: ["snack-notification"],

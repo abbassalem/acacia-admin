@@ -31,18 +31,18 @@
                       </mat-expansion-panel-header>
   
                       <div class="row"  >
-                          <div class="col-1">ID</div> 
+                          <!-- <div class="col-1">ID</div>  -->
                           <div class="col-2 field-title">Name</div>
-                          <div class="col-2 field-title">Description</div>
+                          <div class="col-3 field-title">Description</div>
                           <div class="col-1 field-title">Reference</div> 
                           <div class="col-1 field-title">Price</div> 
                           <div class="col-5 field-title">Image Url</div>
                       </div>
                        
                       <div class="row" style="border: 1px dotted grey"  *ngFor="let product of cat.products">
-                         <div class="col-1">{{product.id}}</div> 
+                         <!-- <div class="col-1">{{product.id}}</div>  -->
                           <div class="col-2 cat-data">{{product.name}}</div>
-                          <div class="col-2 cat-data">{{product.description}}</div>
+                          <div class="col-3 cat-data">{{product.description}}</div>
                           <div class="col-1 cat-data">{{product.reference}}</div>
                           <div class="col-1 cat-data">{{product.price}}</div>
                           <div class="col-5 cat-data"><a target="_blank" [href]="product.imageUrl">{{product.imageUrl}}</a></div>
@@ -98,7 +98,7 @@
         <mat-card class="card-header-category" >                 
           <div class="row">
               <div class="col-1"></div>
-              <div class="col-1">ID</div>
+              <!-- <div class="col-1">ID</div> -->
               <div class="col-2">Name</div>
               <div class="col-2">Description</div>
               <div class="col-1">Reference</div> 
@@ -117,9 +117,9 @@
                 <div class="col-1" style="float: left;">
                   <button mat-icon-button style="color: rgb(202, 48, 48)" (click)="removeProduct(i)"><mat-icon>cancel</mat-icon></button>
                 </div>
-                <mat-form-field class="col-1 cat-dat">
+                <!-- <mat-form-field class="col-1 cat-dat">
                   <input type="text" matInput  placeholder="Id" formControlName="id">
-                </mat-form-field>
+                </mat-form-field> -->
                 <mat-form-field class="col-2 cat-dat">
                   <input type="text" matInput formControlName="name">
                 </mat-form-field>

@@ -86,7 +86,7 @@ export class OrderListComponent {
       { header: 'Selection', checkboxSelection: true, headerCheckboxSelection: true, 
       pinned: 'left',lockPinned:true,lockVisible: true,
        width: 50, field: 'checkboxBtn'},
-      { headerName: 'Order Date',cellStyle: {'color': 'white', 'background-color': 'darkgrey'}, 
+      { headerName: 'Order Date', cellStyle: {'color': 'white', 'min-width': '80px','background-color': 'darkgrey'},  
          field: 'orderDate', pinned: 'left',lockPinned:true,lockVisible: true,
           cellRenderer: 'agGroupCellRenderer', valueFormatter: params => this.dateFormatter(params.data.orderDate)},
       { headerName: 'Order Details', 
