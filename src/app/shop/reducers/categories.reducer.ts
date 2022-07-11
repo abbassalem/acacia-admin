@@ -36,33 +36,19 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
     }
     
     case CategoryActionTypes.CreateCategory: {
-      // return adapter.addOne(action.payload, state);
       return state;
     }
 
-    // case CategoryActionTypes.CreateCategoryComplete: {
-    //   return state;
-    //   // addOne(action.payload, state);
-    // }
-
-    case CategoryActionTypes.CreateProduct: {
-      return adapter.getInitialState(state);
+    case CategoryActionTypes.UpdateCategoryComplete: {
+      return adapter.updateOne({id: action.payload.id, changes: action.payload}, state);
     }
 
-    case CategoryActionTypes.RemoveProduct: {
-      return adapter.getInitialState(state);
+    case CategoryActionTypes.CreateCategoryError: {
+      return state;
     }
 
-    // case CategoryActionTypes.CreateProductComplete: {
-    //   return adapter.getInitialState(state);
-    // }
-
-    // case CategoryActionTypes.CreateProductError: {
-    //   return adapter.getInitialState(state);
-    // }
-
-    case CategoryActionTypes.CreateCategory: {
-      return adapter.addOne(action.payload, state);
+    case CategoryActionTypes.UpdateCategory: {
+      return state;
     }
 
     case CategoryActionTypes.RemoveCategory: {
@@ -83,15 +69,4 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
   }
 }
 
-// export function findCategory(entities: {[id: string]: Category}, ids, productId): number {
-//   let foundId = -1;
-//   const result = ids.forEach( catId:string => {
-//      entities[catId].products.forEach( product => {
-//        if (product.id === productId) {
-//           foundId = catId;
-//        }
-//     });
-//   });
-//   return foundId;
-// }
 

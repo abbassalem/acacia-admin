@@ -22,7 +22,10 @@ export enum CategoryActionTypes {
   RemoveProductError = '[Product] Remove Error',
   RemoveCategory = '[Category] Remove',
   RemoveCategoryComplete = '[Category] Remove Complete',
-  RemoveCategoryError = '[Category] Remove Error'
+  RemoveCategoryError = '[Category] Remove Error',
+  UpdateCategory = '[Category] Update',
+  UpdateCategoryComplete = '[Category] Update Complete',
+  UpdateCategoryError = '[Category] Update Error'
 }
 
 export class CreateCategory implements Action {
@@ -37,6 +40,21 @@ export class CreateCategoryComplete implements Action {
 
 export class CreateCategoryError implements Action {
   readonly type = CategoryActionTypes.CreateCategoryError;
+  constructor(public payload: any) { }
+}
+
+export class UpdateCategory implements Action {
+  readonly type = CategoryActionTypes.UpdateCategory;
+  constructor(public payload: Category) { }
+}
+
+export class UpdateCategoryComplete implements Action {
+  readonly type = CategoryActionTypes.UpdateCategoryComplete;
+  constructor(public payload: Category) { }
+}
+
+export class UpdateCategoryError implements Action {
+  readonly type = CategoryActionTypes.UpdateCategoryError;
   constructor(public payload: any) { }
 }
 
@@ -146,5 +164,8 @@ export type CategoryActionsUnion =
   | CreateProductError
   | RemoveProduct
   | RemoveProductComplete
-  | RemoveProductError;
+  | RemoveProductError
+  | UpdateCategoryComplete
+  | UpdateCategoryError
+  | UpdateCategory;
 

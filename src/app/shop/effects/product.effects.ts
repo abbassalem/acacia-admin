@@ -68,7 +68,6 @@ export class ProductEffects {
       switchMap((action) =>
         this.productService.createCategory(action.payload).pipe(
           map((result) => {
-            console.dir(result.id);
             return new fromCategoryActions.CreateCategoryComplete(result);
           }),
           catchError(err => of(new fromCategoryActions.CreateCategoryError(err)))
@@ -81,7 +80,7 @@ export class ProductEffects {
     this.actions$.pipe(
       ofType<fromCategoryActions.CreateCategoryComplete>(fromCategoryActions.CategoryActionTypes.CreateCategoryComplete),
       map(action => {
-        this.snackBar.open(`Category [${action.payload.name}] saved successfully.`, 'Close', {
+        this.snackBar.open(`Category created successfully.`, 'Close', {
           duration: 4000,
           panelClass: ["snack-notification"],
           horizontalPosition: "center",
@@ -107,7 +106,6 @@ export class ProductEffects {
     )
   }, { dispatch: false })
 
-
   removeCategory$ = createEffect(() =>
     this.actions$.pipe(
       ofType<fromCategoryActions.RemoveCategory>(fromCategoryActions.CategoryActionTypes.RemoveCategory),
@@ -126,7 +124,7 @@ export class ProductEffects {
     this.actions$.pipe(
       ofType<fromCategoryActions.RemoveCategoryComplete>(fromCategoryActions.CategoryActionTypes.RemoveCategoryComplete),
       map(action => {
-        this.snackBar.open(`Category [CategoryId [${action.payload}]] removed successfully.`, 'Close', {
+        this.snackBar.open(`Category with ID [${action.payload}] removed successfully.`, 'Close', {
           duration: 4000,
           panelClass: ["snack-notification"],
           horizontalPosition: "center",
@@ -151,44 +149,41 @@ export class ProductEffects {
     )
   }, { dispatch: false });
 
-
-  createProduct$ = createEffect(() =>
+  UpdateCategory$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<fromCategoryActions.CreateProduct>(fromCategoryActions.CategoryActionTypes.CreateProduct),
-      switchMap(action =>
-        this.productService.createProduct(action.payload.catId, action.payload.product).pipe(
-          map(prodResult => {
-            console.log('create product - productservice');
-            console.dir(prodResult);
-            return new fromCategoryActions.CreateProductComplete(prodResult);
+      ofType<fromCategoryActions.UpdateCategory>(fromCategoryActions.CategoryActionTypes.UpdateCategory),
+      switchMap((action) =>
+        this.productService.updateCategory(action.payload).pipe(
+          map((result) => {
+            return new fromCategoryActions.UpdateCategoryComplete(result);
           }),
-          catchError(err => of(new fromCategoryActions.CreateProductError(err)))
+          catchError(err => of(new fromCategoryActions.UpdateCategoryError(err)))
         )
       )
     )
   )
 
-  createProductSuccess$ = createEffect(() =>
+  UpdateCategorySuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<fromCategoryActions.CreateProductComplete>(fromCategoryActions.CategoryActionTypes.CreateProductComplete),
+      ofType<fromCategoryActions.UpdateCategoryComplete>(fromCategoryActions.CategoryActionTypes.UpdateCategoryComplete),
       map(action => {
-        this.snackBar.open(`Product [${action.payload.product.name} in CategoryId [${action.payload.catId}]]saved successfully.`, 'Close', {
+        this.snackBar.open(`Category [${action.payload.name}] updated successfully.`, 'Close', {
           duration: 4000,
           panelClass: ["snack-notification"],
           horizontalPosition: "center",
           verticalPosition: "top"
         });
-        // this.router.navigate(['categories/', action.payload.catId]);
         return new fromCategoryActions.Load();
-      })
+      }),
+      catchError(err => of(err))
     )
   )
 
-  createProductError$ = createEffect(() => {
+  UpdateCategoryError$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType<fromCategoryActions.CreateProductError>(fromCategoryActions.CategoryActionTypes.CreateProductError),
+      ofType<fromCategoryActions.UpdateCategoryError>(fromCategoryActions.CategoryActionTypes.UpdateCategoryError),
       map(action =>
-        this.snackBar.open(`Error in creating Product [${action.payload}].`, 'Close', {
+        this.snackBar.open(`Error in creating Category [${action.payload}].`, 'Close', {
           duration: 4000,
           panelClass: ["snack-notification"],
           horizontalPosition: "center",
@@ -196,53 +191,8 @@ export class ProductEffects {
         })
       )
     )
-  }, { dispatch: false })
+  }, { dispatch: false });
 
-  removeProduct$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<fromCategoryActions.RemoveProduct>(fromCategoryActions.CategoryActionTypes.RemoveProduct),
-      switchMap(action =>
-        this.productService.removeProduct(action.payload.catId, action.payload.prodId).pipe(
-          map(prodResult => {
-            console.log('remove product - productservice');
-            console.dir(prodResult);
-            return new fromCategoryActions.RemoveProductComplete({ catId: prodResult.catId, prodId: prodResult.prodId });
-          }),
-          catchError(err => of(new fromCategoryActions.RemoveProductError(err)))
-        )
-      )
-    )
-  )
-
-  removeProductSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<fromCategoryActions.RemoveProductComplete>(fromCategoryActions.CategoryActionTypes.RemoveProductComplete),
-      map(action => {
-        this.snackBar.open(`Product [${action.payload.prodId} in CategoryId [${action.payload.catId}]] removed successfully.`, 'Close', {
-          duration: 4000,
-          panelClass: ["snack-notification"],
-          horizontalPosition: "center",
-          verticalPosition: "top"
-        });
-        // this.router.navigate(['categories/', action.payload.catId]);
-        return new fromCategoryActions.Load();
-      })
-    )
-  )
-
-  removeProductError$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType<fromCategoryActions.RemoveProductError>(fromCategoryActions.CategoryActionTypes.RemoveProductError),
-      map(action =>
-        this.snackBar.open(`Error in removing Product [${action.payload}].`, 'Close', {
-          duration: 4000,
-          panelClass: ["snack-notification"],
-          horizontalPosition: "center",
-          verticalPosition: "top"
-        })
-      )
-    )
-  }, { dispatch: false })
 }
 
 

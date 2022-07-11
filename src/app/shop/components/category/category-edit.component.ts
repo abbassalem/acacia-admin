@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CreateCategory, Load, RemoveCategory } from '../../actions/category.actions';
+import { CreateCategory, Load, RemoveCategory, UpdateCategory } from '../../actions/category.actions';
 import { Category } from '../../models/category.model';
 import { getAllCategories } from '../../reducers';
 import * as fromCategory from '../../reducers/categories.reducer';
@@ -12,6 +12,7 @@ import { Image } from 'src/app/core/models/config.model';
 import { Product } from '../../models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/dialogs/confirm-dialog.component';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-category-edit',
@@ -52,50 +53,56 @@ export class CategoryEditComponent implements OnInit {
     if (this.categoryForm.valid) {
       switch (this.mode) {
         case 'add': {
-          let products: Array<Product> = new Array();
-          this.productArray.controls.forEach((c) => {
-            products.push({
-              name: c.get('name').value, description: c.get('description').value,
-              price: c.get('price').value, reference: c.get('reference').value, imageUrl: c.get('imageUrl').value
-            });
-          });
-          const newCat: Category = Object.assign(this.categoryForm.value, { products: products });
+          // let products: Array<Product> = new Array();
+          // this.productArray.controls.forEach((c) => {
+          //   products.push({
+          //     id: c.get('id').value,
+          //     name: c.get('name').value, description: c.get('description').value,
+          //     price: c.get('price').value, reference: c.get('reference').value, imageUrl: c.get('imageUrl').value
+          //   });
+          // });
+          const newCat: Category = Object.assign({...this.categoryForm.value});
+          // const newCat: Category = Object.assign(this.categoryForm.value, { products: products });
           console.log('newcat');
           console.dir(newCat);
           this.categoryStore.dispatch(new CreateCategory(newCat));
-          this.mode = 'none';
-          this.currentCatIndex = undefined;
-          this.initForm();
           break;
         }
-        // case 'edit': {
-        //   // this.categoryStore.dispatch(new UpdateCategory(newCat));
-        //   break;
-        // } 
-        // case 'remove': {
+        case 'edit': {
+          console.log('edit mode - before save - value of the form');
+          let  updateCat: Category = Object.assign({...this.categoryForm.value}, {id: this.categoryForm.get('id').value});
+          console.dir(updateCat);
+          this.categoryStore.dispatch(new UpdateCategory(updateCat));
+          break;
+        } 
       }
+
+      this.mode = 'none';
+      this.currentCatIndex = undefined;
+      this.setFormValue();
     }
   }
 
-  viewCategory() {
-    this.mode = 'add';
-    this.currentCatIndex = undefined;
-    this.initForm();
-  }
+  // viewCategory(cat: Category, index: number) {
+  //   this.mode = 'add';
+  //   this.currentCatIndex = undefined;
+  //   this.setFormValue();
+  // }
 
   addCategory() {
     this.mode = 'add';
     this.currentCatIndex = undefined;
-    this.initForm();
+    this.setFormValue();
   }
 
-  editCatogory(cat: Category, index: number) {
+  editCategory(cat: Category, index: number) {
     this.currentCatIndex = index;
     this.mode = 'edit';
+    this.currentCatIndex = index;
     this.setFormValue(cat);
   }
 
-  removeCatogory(cat: Category, index: number) {
+  removeCategory(cat: Category, index: number) {
     this.currentCatIndex = index;
     this.mode = 'remove';
     const message = `Deleting Category  [${cat.name}] ?`;
@@ -116,14 +123,14 @@ export class CategoryEditComponent implements OnInit {
 
   cancel() {
     this.mode = 'none';
-    this.initForm();
+    this.setFormValue();
     this.currentCatIndex = undefined;
   }
 
-  initForm() {
-    this.categoryForm.reset();
-    this.setFormValue();
-  }
+  // initForm() {
+  //   this.categoryForm.reset();
+  //   this.setFormValue();
+  // }
 
   setFormValue(cat?: Category) {
     if (cat) {
@@ -133,7 +140,6 @@ export class CategoryEditComponent implements OnInit {
 
       if (cat.products) {
         (<FormArray>this.categoryForm.get('products')).clear();
-
         for (let prod of cat.products) {
           (<FormArray>this.categoryForm.get('products')).push(
             new FormGroup({
@@ -161,7 +167,7 @@ export class CategoryEditComponent implements OnInit {
 
   newProduct(): FormGroup {
     return new FormGroup({
-      id: new FormControl({ value: '', disabled: true }),
+      id: new FormControl({ value: this.productArray.length  +1, disabled: true }),
       name: new FormControl('', Validators.required),
       price: new FormControl(0, Validators.required),
       description: new FormControl(''),
@@ -176,8 +182,6 @@ export class CategoryEditComponent implements OnInit {
   }
 
   removeProduct(index: number) {
-    console.dir(index);
     this.productArray.removeAt(index)
   }
 }
-

@@ -1,154 +1,151 @@
 <form [formGroup]="categoryForm">  
-<div class="row" style="padding: 5px">
-  <div class="col-12" >       
-      <mat-card-subtitle><b>Category List</b></mat-card-subtitle>
-  </div>      
-
-      <div class="row" style="margin: 1px; padding: 1px; ">
-        <div class="col-10" >
-            <mat-card class="card-header-category" >                 
-              <div class="row">
-                <div class="col-2 field-title"><b>ID</b></div> 
-                <div class="col-4 field-title"><b>Name</b></div>
-                <div class="col-6 field-title"><b>Description </b></div>
-              </div>
-            </mat-card>         
-        </div> 
-        <div class="col-2" ></div>
-      </div>
-    
-      <div class="row"  *ngFor="let cat of categoryList$ | async; let i=index"  style="margin: 1px; padding: 1px;">
-            <div class="col-10" >
-                <mat-expansion-panel >
-                      <mat-expansion-panel-header >
-                        <mat-card style="width: 100%;" [class.cat-selected]="i === currentCatIndex">                 
-                          <div class="row">
-                            <div class="col-2 cat-data">{{cat.id}}</div> 
-                            <div class="col-4 cat-data">{{cat.name}}</div>
-                            <div class="col-6 cat-data">{{cat.description}}</div>
-                          </div>
-                        </mat-card>
-                    </mat-expansion-panel-header>
-
-                    <div class="row"  >
-                        <!-- <div class="col-2">ID</b></div>  -->
-                        <div class="col-2 field-title">Name</div>
-                        <div class="col-2 field-title">Description</div>
-                        <div class="col-1 field-title">Reference</div> 
-                        <div class="col-1 field-title">Price</div> 
-                        <div class="col-6 field-title">Image Url</div>
-                    </div>
-                     
-                    <div class="row" style="border: 1px dotted grey"  *ngFor="let product of cat.products">
-                       <!-- <div class="col-2">{{product.id}}</div>  -->
-                        <div class="col-2 cat-data">{{product.name}}</div>
-                        <div class="col-2 cat-data">{{product.description}}</div>
-                        <div class="col-1 cat-data">{{product.reference}}</div>
-                        <div class="col-1 cat-data">{{product.price}}</div>
-                        <div class="col-6 cat-data"><a target="_blank" [href]="product.imageUrl">{{product.imageUrl}}</a></div>
-                    </div>
-                </mat-expansion-panel>
+  <div class="row" style="padding: 5px">
+    <div class="col-12" >       
+        <mat-card-subtitle><b>Category List</b></mat-card-subtitle>
+    </div>      
+  
+        <div class="row" style="margin: 1px; padding: 1px; ">
+          <div class="col-10" >
+              <mat-card class="card-header-category" >                 
+                <div class="row">
+                  <div class="col-2 field-title"><b>ID</b></div> 
+                  <div class="col-4 field-title"><b>Name</b></div>
+                  <div class="col-6 field-title"><b>Description </b></div>
+                </div>
+              </mat-card>         
+          </div> 
+          <div class="col-2" ></div>
+        </div>
+      
+        <div class="row"  *ngFor="let cat of categoryList$ | async; let i=index"  style="margin: 1px; padding: 1px;">
+              <div class="col-10">
+                  <mat-expansion-panel >
+                        <mat-expansion-panel-header >
+                          <mat-card style="width: 100%;" [class.cat-selected]="i === currentCatIndex">                 
+                            <div class="row">
+                              <div class="col-2 cat-data">{{cat.id}}</div> 
+                              <div class="col-4 cat-data">{{cat.name}}</div>
+                              <div class="col-6 cat-data">{{cat.description}}</div>
+                            </div>
+                          </mat-card>
+                      </mat-expansion-panel-header>
+  
+                      <div class="row"  >
+                          <div class="col-1">ID</div> 
+                          <div class="col-2 field-title">Name</div>
+                          <div class="col-2 field-title">Description</div>
+                          <div class="col-1 field-title">Reference</div> 
+                          <div class="col-1 field-title">Price</div> 
+                          <div class="col-5 field-title">Image Url</div>
+                      </div>
+                       
+                      <div class="row" style="border: 1px dotted grey"  *ngFor="let product of cat.products">
+                         <div class="col-1">{{product.id}}</div> 
+                          <div class="col-2 cat-data">{{product.name}}</div>
+                          <div class="col-2 cat-data">{{product.description}}</div>
+                          <div class="col-1 cat-data">{{product.reference}}</div>
+                          <div class="col-1 cat-data">{{product.price}}</div>
+                          <div class="col-5 cat-data"><a target="_blank" [href]="product.imageUrl">{{product.imageUrl}}</a></div>
+                      </div>
+                  </mat-expansion-panel>
             </div>
             <div class="col-2" >
-                <button mat-mini-fab color="primary"  (click)="editCatogory(cat, i)"><mat-icon>edit</mat-icon></button>
-                <button mat-mini-fab color="warn" (click)="removeCatogory(cat, i)"> <mat-icon>cancel</mat-icon></button>
+                <button mat-mini-fab color="primary"  (click)="editCategory(cat, i)"><mat-icon>edit</mat-icon></button>
+                <button mat-mini-fab color="warn" (click)="removeCategory(cat, i)"> <mat-icon>cancel</mat-icon></button>
             </div>          
         </div>  
-</div>           
-
-<mat-toolbar class="cat-toobar">
-    <button style="float: left" [disabled]="mode === 'add' || mode ==='edit'" mat-raised-button color="primary" (click)="addCategory()">New Category 
-      <mat-icon>add</mat-icon>
-    </button>
-        &nbsp;&nbsp;
-    <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right" mat-raised-button color="primary"  [disabled]="!categoryForm.valid" (click)="save()" mat-button>Save</button>
-        &nbsp;&nbsp;
-    <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right" mat-raised-button  type="button"  (click)="cancel()" mat-button>Cancel</button>
-    &nbsp;&nbsp;
-    <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right;" mat-raised-button color="secondary" (click)="addProduct()" mat-button>Add Product
-      <mat-icon>add</mat-icon>
-    </button>
-</mat-toolbar> 
-
-
-<div class="row">
-    <div class="col-12" *ngIf="mode === 'add' || mode ==='edit'">
-        <mat-card class="cat-element">
-              <mat-card-header>
-              </mat-card-header>
-              <div class="row">
-                <mat-form-field class="col-3 cat-dat" >
-                    <input type="text"  matInput placeholder="Category ID" formControlName="id">
+  </div>           
+  
+  <mat-toolbar class="cat-toobar">
+      <button style="float: left" [disabled]="mode === 'add' || mode ==='edit'" mat-raised-button color="primary" (click)="addCategory()">New Category 
+        <mat-icon>add</mat-icon>
+      </button>
+          &nbsp;&nbsp;
+      <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right" mat-raised-button color="primary"  [disabled]="!categoryForm.valid" (click)="save()" mat-button>Save</button>
+          &nbsp;&nbsp;
+      <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right" mat-raised-button  type="button"  (click)="cancel()" mat-button>Cancel</button>
+      &nbsp;&nbsp;
+      <button *ngIf="mode === 'add' || mode ==='edit'" style="float:right;" mat-raised-button color="secondary" (click)="addProduct()" mat-button>Add Product
+        <mat-icon>add</mat-icon>
+      </button>
+  </mat-toolbar> 
+  
+  
+  <div class="row">
+      <div class="col-12" *ngIf="mode === 'add' || mode ==='edit'">
+          <mat-card class="cat-element">
+                <mat-card-header>
+                </mat-card-header>
+                <div class="row">
+                  <mat-form-field class="col-3 cat-dat" >
+                      <input type="text"  matInput placeholder="Category ID" formControlName="id">
+                  </mat-form-field>
+                
+                  <mat-form-field class="col-3 cat-dat" >
+                      <input type="text" matInput placeholder="Category name" formControlName="name">
                 </mat-form-field>
-              
-                <mat-form-field class="col-3 cat-dat" >
-                    <input type="text" matInput placeholder="Category name" formControlName="name">
-              </mat-form-field>
-
-              <mat-form-field class="col-6 cat-dat" >
-                    <input type="text" matInput placeholder="Category description" formControlName="description">
-              </mat-form-field>
-            </div>
-        </mat-card>
-    </div>
-</div>    
-
-
-
-<div class="row" style="margin: 3px; padding: 3px; "  *ngIf="(mode === 'add' || mode ==='edit') && productArray.length > 0 ">
-  <!-- <div class="col-1"></div> -->
-  <div class="col-12" >
-      <mat-card class="card-header-category" >                 
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-2">Name</div>
-            <div class="col-3">Description</div>
-            <div class="col-2">Reference</div> 
-            <div class="col-1">Price</div> 
-            <div class="col-2">Image Url</div> 
-            <div class="col-1">Image Preview</div>
-        </div>
-      </mat-card>         
-  </div> 
-  <!-- <div class="col-1" ></div> -->
-</div>
-
-
-<div formArrayName="products" class="row prod-array" *ngIf="mode === 'add' || mode ==='edit'">
-    <div class="col-12" >
-        <mat-card class="card-data-product" *ngFor="let prod of productArray.controls; let i=index;">
-            <div [formGroupName] = "i" class="row">
-              <div class="col-1" style="float: left;">
-                <button mat-icon-button style="color: rgb(202, 48, 48)" (click)="removeProduct(i)"><mat-icon>cancel</mat-icon></button>
+  
+                <mat-form-field class="col-6 cat-dat" >
+                      <input type="text" matInput placeholder="Category description" formControlName="description">
+                </mat-form-field>
               </div>
-              <!-- <mat-form-field class="col-1 cat-dat" *ngIf="mode === 'edit'">
-                <input type="text" matInput  placeholder="Id" formControlName="id">
-              </mat-form-field> -->
-              <mat-form-field class="col-2 cat-dat">
-                <input type="text" matInput formControlName="name">
-              </mat-form-field>
-              <mat-form-field class="col-3 cat-dat">
-                <input type="text" matInput  formControlName="description">
-              </mat-form-field>
-              <mat-form-field class="col-2 cat-dat">
-                <input type="text" matInput  formControlName="reference">
-              </mat-form-field>
-              <mat-form-field class="col-1 cat-dat">
-                <input type="number" matInput  formControlName="price">
-              </mat-form-field>
-              <mat-form-field class="col-2 cat-dat">
-                  <mat-select formControlName="imageUrl" #imgRef>
-                    <mat-option *ngFor= "let img of imageList$ | async" [value]="img.downloadURL" [selected]="imageUrl === img.path" >{{img.path}}</mat-option>
-                  </mat-select>
-              </mat-form-field>
-              <img  class="col-1" *ngIf="imgRef.value" [src]="imgRef.value" [alt]="imgRef.value" style="height:50px; height: 60px; ">
-              <!-- <img larger-image class="col-1" *ngIf="imgRef.value" [src]="imgRef.value" [alt]="imgRef.value" style="height:50px; height: 40px; "> -->
-              
-            </div>
-        </mat-card>
-    </div>
+          </mat-card>
+      </div>
+  </div>    
+  
+  <div class="row" style="margin: 3px; padding: 3px; "  *ngIf="(mode === 'add' || mode ==='edit') && productArray.length > 0 ">
+    <div class="col-12" >
+        <mat-card class="card-header-category" >                 
+          <div class="row">
+              <div class="col-1"></div>
+              <div class="col-1">ID</div>
+              <div class="col-2">Name</div>
+              <div class="col-2">Description</div>
+              <div class="col-1">Reference</div> 
+              <div class="col-1">Price</div> 
+              <div class="col-2">Image Url</div> 
+              <div class="col-2">Image Preview</div>
+          </div>
+        </mat-card>         
+    </div> 
   </div>
-  </form>
-
-
-
+  
+  <div formArrayName="products" class="row prod-array" *ngIf="mode === 'add' || mode ==='edit'">
+      <div class="col-12" >
+          <mat-card class="card-data-product" *ngFor="let prod of productArray.controls; let i=index;">
+              <div [formGroupName] = "i" class="row">
+                <div class="col-1" style="float: left;">
+                  <button mat-icon-button style="color: rgb(202, 48, 48)" (click)="removeProduct(i)"><mat-icon>cancel</mat-icon></button>
+                </div>
+                <mat-form-field class="col-1 cat-dat">
+                  <input type="text" matInput  placeholder="Id" formControlName="id">
+                </mat-form-field>
+                <mat-form-field class="col-2 cat-dat">
+                  <input type="text" matInput formControlName="name">
+                </mat-form-field>
+                <mat-form-field class="col-2 cat-dat">
+                  <input type="text" matInput  formControlName="description">
+                </mat-form-field>
+                <mat-form-field class="col-1 cat-dat">
+                  <input type="text" matInput  formControlName="reference">
+                </mat-form-field>
+                <mat-form-field class="col-1 cat-dat">
+                  <input type="number" matInput  formControlName="price">
+                </mat-form-field>
+                <mat-form-field class="col-2 cat-dat">
+                    <mat-select formControlName="imageUrl" #imgRef>
+                      <mat-option *ngFor= "let img of imageList$ | async" [value]="img.downloadURL" [selected]="imageUrl === img.path" >{{img.path}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <img  class="col-2" *ngIf="imgRef.value" [src]="imgRef.value" [alt]="imgRef.value" style="height:50px; height: 60px; ">
+                <!-- <img larger-image class="col-1" *ngIf="imgRef.value" [src]="imgRef.value" [alt]="imgRef.value" style="height:50px; height: 40px; "> -->
+                
+              </div>
+          </mat-card>
+      </div>
+    </div>
+    </form>
+  
+  
+  
+  

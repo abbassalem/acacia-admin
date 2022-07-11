@@ -43,24 +43,29 @@ export class ProductService {
   removeCategory(catId: string): Observable<any> {
     const p = this.db.collection('categories').doc(catId).delete();
       return of({catId: catId});
-    }
+  }
 
-  createProduct(catId: string, product: Product): Observable<any> {
-    const p = this.db.collection('categories')
-    .doc(catId.toString())
-      .update({products: arrayUnion(product)});
-    
-      return of({catId: catId, product: product });
-    
-    }
+  updateCategory(cat: Category): Observable<any> {
+    const p = this.db.collection('categories').doc(cat.id).update({name: cat.name, description: cat.description, products: cat.products});
+      return of(cat);
+  }
 
-    removeProduct(catId: number, prodId: number): Observable<any> {
-      const p = this.db.collection('categories')
-      .doc(catId.toString())
-        .update({products: arrayRemove(prodId)});
+  // createProduct(catId: string, product: Product): Observable<any> {
+  //   const p = this.db.collection('categories')
+  //   .doc(catId.toString())
+  //     .update({products: arrayUnion(product)});
+    
+  //     return of({catId: catId, product: product });
+    
+  //   }
+
+  //   removeProduct(catId: number, prodId: number): Observable<any> {
+  //     const p = this.db.collection('categories')
+  //     .doc(catId.toString())
+  //       .update({products: arrayRemove(prodId)});
       
-        return of({catId: catId, prodId: prodId });
-      }
+  //       return of({catId: catId, prodId: prodId });
+  //     }
 
 }
 
