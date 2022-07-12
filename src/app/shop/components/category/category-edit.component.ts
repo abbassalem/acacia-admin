@@ -12,6 +12,7 @@ import { Image } from 'src/app/core/models/config.model';
 import { Product } from '../../models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/dialogs/confirm-dialog.component';
+import { MatSortHeader } from '@angular/material/sort';
 
 @Component({
   selector: 'app-category-edit',
@@ -28,6 +29,8 @@ export class CategoryEditComponent implements OnInit {
   mode: string = 'none';
   currentCatIndex: number;
   currentProductLength: number;
+  productMinId = 0;
+  productMaxId = 10000;
 
   constructor(private categoryStore: Store<fromCategory.CategoryState>,
     private dialog: MatDialog,
@@ -49,12 +52,17 @@ export class CategoryEditComponent implements OnInit {
     this.categoryList$ = this.categoryStore.select(getAllCategories);
   }
 
+  generateProductId(){
+    return Math.floor(Math.random() * (this.productMaxId - this.productMinId +1)) + this.productMinId;
+  }
+
   save() {
     if (this.categoryForm.valid) {
+      const randomForProductId = this.generateProductId();
       let indexedProducts: Array<Product> = new Array();
           this.productArray.controls.forEach((c: AbstractControl, index: number) => {
             indexedProducts.push({
-              id: index + 1,
+              id: randomForProductId + index + 1,
               name: c.get('name').value, description: c.get('description').value,
               price: c.get('price').value, reference: c.get('reference').value, imageUrl: c.get('imageUrl').value
             });
