@@ -27,8 +27,7 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
             </mat-form-field>
             &nbsp;&nbsp;
             <mat-form-field style="max-width: fit-content;">
-              <input matInput formControlName ="orderUser" 
-              [matAutocomplete]="auto" placeholder="Filter email">
+              <input matInput formControlName ="orderUser" [matAutocomplete]="auto" placeholder="Filter email">
               <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
                   <mat-option *ngFor="let user of (fetchedUsers$ | async)" [value]="user">
                     {{user.email}}

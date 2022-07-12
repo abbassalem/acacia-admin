@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { combineLatestWith, map, Observable, startWith } from 'rxjs';
 import { CreateCategory, Load, RemoveCategory, UpdateCategory } from '../../actions/category.actions';
 import { Category } from '../../models/category.model';
 import { getAllCategories } from '../../reducers';
@@ -12,7 +12,6 @@ import { Image } from 'src/app/core/models/config.model';
 import { Product } from '../../models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/dialogs/confirm-dialog.component';
-import { MatSortHeader } from '@angular/material/sort';
 
 @Component({
   selector: 'app-category-edit',
@@ -26,12 +25,14 @@ export class CategoryEditComponent implements OnInit {
   productForm: FormGroup;
   categoryList$: Observable<any>;
   imageList$: Observable<Array<Image>>;
+  filteredImageList$: Array<Observable<Array<Image>>> = new Array();
   mode: string = 'none';
   currentCatIndex: number;
   currentProductLength: number;
   productMinId = 0;
   productMaxId = 10000;
-
+  filterImageControls: Array<FormControl> = new Array() ;
+ 
   constructor(private categoryStore: Store<fromCategory.CategoryState>,
     private dialog: MatDialog,
     private configStore: Store<fromConfig.ConfigState>) {
@@ -50,6 +51,7 @@ export class CategoryEditComponent implements OnInit {
 
     this.imageList$ = this.configStore.select(fromConfig.getImages);
     this.categoryList$ = this.categoryStore.select(getAllCategories);
+    // this.filteredImageList$ = this.imageList$;
   }
 
   generateProductId(){
@@ -129,19 +131,23 @@ export class CategoryEditComponent implements OnInit {
       this.categoryForm.get('id').setValue(cat.id);
       this.categoryForm.get('name').setValue(cat.name);
       this.categoryForm.get('description').setValue(cat.description);
-
+      
       if (cat.products) {
         (<FormArray>this.categoryForm.get('products')).clear();
+        this.filterImageControls = new Array();
+        this.filteredImageList$ = new Array();
         for (let prod of cat.products) {
           (<FormArray>this.categoryForm.get('products')).push(
             new FormGroup({
-              // id: new FormControl({ value: prod.id, disabled: true }),
               name: new FormControl(prod.name),
               price: new FormControl(prod.price),
               description: new FormControl(prod.description),
               reference: new FormControl(prod.reference),
-              imageUrl: new FormControl(prod.imageUrl)
-            }))
+              imageUrl: new FormControl(prod.imageUrl),
+              searchImage: new FormControl(prod.imageUrl)
+            }));
+            let index = this.filterImageControls.push(new FormControl(''));
+            this.attachValueChanges(index);
         }
       }
     } else {
@@ -149,6 +155,8 @@ export class CategoryEditComponent implements OnInit {
       this.categoryForm.get('name').setValue('');
       this.categoryForm.get('description').setValue('');
       (<FormArray>this.categoryForm.get('products')).clear();
+      this.filterImageControls = new Array();
+      this.filteredImageList$ = new Array();
     }
   }
 
@@ -157,13 +165,15 @@ export class CategoryEditComponent implements OnInit {
   }
 
   newProduct(): FormGroup {
+    let index = this.filterImageControls.push(new FormControl(''));
+    this.attachValueChanges(index);
     return new FormGroup({
-      // id: new FormControl({ value: this.productArray.length  +1, disabled: false }),
       name: new FormControl('', Validators.required),
       price: new FormControl(0, Validators.required),
       description: new FormControl(''),
       reference: new FormControl(''),
-      imageUrl: new FormControl('')
+      imageUrl: new FormControl(''),
+      searchImage: new FormControl('')
     })
   }
 
@@ -174,5 +184,25 @@ export class CategoryEditComponent implements OnInit {
 
   removeProduct(index: number) {
     this.productArray.removeAt(index);
+    this.filterImageControls.splice(index,1);
+    this.filteredImageList$.splice(index,1);
   }
+
+  attachValueChanges(index:number){
+    this.filteredImageList$.push(this.filterImageControls[index -1].valueChanges.pipe(
+      startWith(''),
+      combineLatestWith(this.imageList$),
+      map( ([filter, images]) => {
+        if(!images || images.length === 0) {
+          return [];
+        }
+        if (!filter || filter === '') {
+          return images;
+        }
+          return images.filter( img => img.path.search(filter) !== -1); 
+        } )
+    ));
+  
+  }
+  
 }

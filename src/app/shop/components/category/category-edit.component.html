@@ -70,7 +70,6 @@
       </button>
   </mat-toolbar> 
   
-  
   <div class="row">
       <div class="col-12" *ngIf="mode === 'add' || mode ==='edit'">
           <mat-card class="cat-element">
@@ -98,13 +97,12 @@
         <mat-card class="card-header-category" >                 
           <div class="row">
               <div class="col-1"></div>
-              <!-- <div class="col-1">ID</div> -->
               <div class="col-2">Name</div>
               <div class="col-2">Description</div>
               <div class="col-1">Reference</div> 
               <div class="col-1">Price</div> 
-              <div class="col-2">Image Url</div> 
-              <div class="col-2">Image Preview</div>
+              <div class="col-2">Image Url</div>
+              <div class="col-2">Image Preview </div>
           </div>
         </mat-card>         
     </div> 
@@ -117,9 +115,6 @@
                 <div class="col-1" style="float: left;">
                   <button mat-icon-button style="color: rgb(202, 48, 48)" (click)="removeProduct(i)"><mat-icon>cancel</mat-icon></button>
                 </div>
-                <!-- <mat-form-field class="col-1 cat-dat">
-                  <input type="text" matInput  placeholder="Id" formControlName="id">
-                </mat-form-field> -->
                 <mat-form-field class="col-2 cat-dat">
                   <input type="text" matInput formControlName="name">
                 </mat-form-field>
@@ -133,9 +128,14 @@
                   <input type="number" matInput  formControlName="price">
                 </mat-form-field>
                 <mat-form-field class="col-2 cat-dat">
-                    <mat-select formControlName="imageUrl" #imgRef>
-                      <mat-option *ngFor= "let img of imageList$ | async" [value]="img.downloadURL" [selected]="imageUrl === img.path" >{{img.path}}</mat-option>
-                    </mat-select>
+                
+                  <mat-select formControlName="imageUrl" #imgRef>
+                    <mat-icon>search</mat-icon>
+                    <mat-form-field><input style="color: rgb(24, 23, 20);background-color:white" matInput [formControl]="filterImageControls[i]"></mat-form-field>
+                    <mat-option *ngFor="let img of filteredImageList$[i] | async" [value]="img.downloadURL" [selected]="imageUrl === img.path" >
+                        {{img.path}}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
                 <img  class="col-2" *ngIf="imgRef.value" [src]="imgRef.value" [alt]="imgRef.value" style="height:50px; height: 60px; ">
                 <!-- <img larger-image class="col-1" *ngIf="imgRef.value" [src]="imgRef.value" [alt]="imgRef.value" style="height:50px; height: 40px; "> -->
