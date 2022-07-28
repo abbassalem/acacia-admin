@@ -1,12 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
-import {AngularFirestore,AngularFirestoreDocument, DocumentData} from '@angular/fire/compat/firestore';
+import { AngularFirestore,AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-
 import { User } from '../models/user';
-import * as firestore from 'firebase/firestore';
-import { map, Observable, of } from 'rxjs';
-import { QuerySnapshot } from 'firebase/firestore';
+import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -123,7 +120,7 @@ export class AuthService {
   SignOut() {
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user');
-      this.router.navigate(['sign-in']);
+      this.router.navigate(['/login']);
     });
   }
 

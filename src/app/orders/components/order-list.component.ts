@@ -14,6 +14,7 @@ import 'ag-grid-enterprise';
       <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="cancel()">Cancel</button>
       &nbsp;&nbsp;
       <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="pay()"> Paid</button>
+      <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="newOrders()"> Paid</button>
  </mat-toolbar-row>    
 
   <ag-grid-angular #agGrid *ngIf="orderList && orderList.length > 0"
@@ -88,7 +89,7 @@ export class OrderListComponent {
        width: 50, field: 'checkboxBtn'},
       { headerName: 'Order Date', cellStyle: {'color': 'white', 'min-width': '80px','background-color': 'darkgrey'},  
          field: 'orderDate', pinned: 'left',lockPinned:true,lockVisible: true,
-          cellRenderer: 'agGroupCellRenderer', valueFormatter: params => this.dateFormatter(params.data.orderDate)},
+          cellRenderer: 'agGroupCellRenderer', valueFormatter: params => this.dateFormatter(params.data.orderDate, true)},
       { headerName: 'Order Details', 
         children: [
           {headerName: 'Status',field: 'status'},
@@ -98,7 +99,7 @@ export class OrderListComponent {
       {headerName: 'Delivery Info',   
           children: [
             { headerName: 'Delivery Date',field: 'deliveryDate', 
-            valueFormatter: params => this.dateFormatter(params.data.deliveryDate)},
+            valueFormatter: params => this.dateFormatter(params.data.deliveryDate, false)},
             { headerName: 'Delivery Time',field: 'deliveryTime'}
       ]},
       { headerName: 'User Info',  
@@ -143,9 +144,16 @@ export class OrderListComponent {
     }, 
   };
 
-  dateFormatter(date): string {
-    let str = new Date(date).getDate().toString() + '/' + 
-    new Date(date).getMonth().toString() +  '/' + new Date(date).getFullYear().toString();
+  dateFormatter(date: Date, withTime: boolean ): string {
+    
+    let str:string;
+    if(withTime){
+      str = new Date(date).getDate().toString() + '/' + 
+      new Date(date).getMonth().toString() +  '/' + new Date(date).getFullYear().toString() + '-' + new Date(date).getHours().toString() + ':' + new Date(date).getMinutes().toString();
+    } else {
+      str = new Date(date).getDate().toString() + '/' + 
+      new Date(date).getMonth().toString() +  '/' + new Date(date).getFullYear().toString();
+    }
     return str;
   }
 

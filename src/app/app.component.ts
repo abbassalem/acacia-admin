@@ -11,7 +11,7 @@ import { User } from './auth/models/user';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
 <app-toolbar>
-<button  mat-button [matMenuTriggerFor]="menu">Menu<mat-icon>menu</mat-icon></button>
+<button *ngIf="(this.loggedIn$ | async)"  mat-button [matMenuTriggerFor]="menu">Menu<mat-icon>menu</mat-icon></button>
     <mat-menu #menu="matMenu">
  
       <button mat-menu-item routerLink="/shop/categories">
@@ -24,7 +24,7 @@ import { User } from './auth/models/user';
           New Category
       </button> -->
 
-      <button mat-menu-item routerLink="/gallery">
+      <button mat-menu-item routerLink="/gallery" >
           <mat-icon>list</mat-icon>
           Gallery
       </button>
@@ -34,7 +34,7 @@ import { User } from './auth/models/user';
           Orders
       </button>
     
-      <button mat-menu-item  (click)="logout()" >
+      <button mat-menu-item  (click)="logout()" *ngIf="(this.loggedIn$ | async)" >
         <mat-icon>phonelink_off</mat-icon>
         Sign Out
       </button>
@@ -62,14 +62,16 @@ export class AppComponent implements OnInit {
 
   loggedIn$: Observable<boolean>;
   user$: Observable<User>;
+  loggedIn = false;
 
   constructor(private store: Store<fromRoot.State>) {
   
   }
 
-  ngOnInit() {
-    this.loggedIn$ = this.store.pipe(select(fromRoot.isLoggedIn));
-    this.user$ = this.store.pipe(select(fromRoot.getUser));
+  async ngOnInit() {
+    this.loggedIn$ = await this.store.pipe(select(fromRoot.isLoggedIn));
+    this.user$ = await this.store.pipe(select(fromRoot.getUser));
+    this.loggedIn$.subscribe( user => this.loggedIn = user);
   }
 
   logout() {

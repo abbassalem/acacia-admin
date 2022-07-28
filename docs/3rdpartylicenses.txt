@@ -2070,8 +2070,6 @@ firebase/compat/firestore
 
 firebase/compat/storage
 
-firebase/firestore
-
 firebase/messaging
 
 firebase/remote-config

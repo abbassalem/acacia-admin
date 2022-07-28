@@ -1,6 +1,7 @@
 import { AuthActionsUnion, AuthActionTypes } from './../actions/auth.actions';
 import { User } from '../models/user';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { userInfo } from 'os';
 
 export interface State {
   loggedIn: boolean;
@@ -69,7 +70,11 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
 
 
     case AuthActionTypes.Logout: {
-      return initialState;
+      return {
+        ...state, 
+        loggedIn: false,
+        user: null
+      };
     }
 
     case AuthActionTypes.FetchedUsers: {
