@@ -26,8 +26,8 @@ export enum OrderStatus {
 
 
 export interface OrderSearchCriteria {
-    start: number;
-    end: number;
+    start?: number;
+    end?: number;
     status?: string;
     userId?: string;
   }

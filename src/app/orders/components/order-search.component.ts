@@ -1,17 +1,36 @@
 import { Component, Output, Input, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl,FormGroup, Validators } from '@angular/forms';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { debounceTime, distinctUntilChanged, Observable, of, Subscription, switchMap } from 'rxjs';
 import { User } from 'src/app/auth/models/user';
-import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
+import { OrderSearchCriteria, OrderStatus } from 'src/app/shop/models/order.model';
 
 @Component({
   selector: 'app-order-search',
   template: `
-    <form [formGroup]="searchGroup">
+  <form [formGroup]="searchGroup">
+    
+<mat-tab-group (selectedTabChange)="tabChange($event)"  >
+  <mat-tab> 
+      <ng-template matTabLabel *ngIf="activeTab === 0">
+          <span [matBadge]="orderCount" matBadgeOverlap="false">Open Orders</span>
+      </ng-template>
+      <ng-template matTabLabel *ngIf="activeTab !== 0">
+          <span matBadgeOverlap="false">Open Orders</span>
+      </ng-template>
       <mat-toolbar>
         <mat-toolbar-row>
-          <h6 style="float: right"><small>Search order</small></h6>
+          <!-- <button  color="primary" mat-raised-button (click)="openOrders()"> Open Orders</button> -->
         </mat-toolbar-row>
+       </mat-toolbar> 
+  </mat-tab>
+ 
+  <mat-tab label="Search Orders"> 
+
+    <mat-toolbar>
+        <!-- <mat-toolbar-row>
+          <h6 style="float: right"><small>Search order</small></h6>
+        </mat-toolbar-row> -->
         <mat-toolbar-row>
           
           <mat-form-field style="max-width: fit-content;" >
@@ -49,8 +68,10 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
             <mat-icon>search</mat-icon>Search
           </button>
         </mat-toolbar-row>
-  </mat-toolbar>    
-      </form>
+  </mat-toolbar>   
+  </mat-tab>
+</mat-tab-group> 
+</form>
   `,
   styles: [
     `
@@ -86,15 +107,16 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
   ],
 })
 export class OrderSearchComponent implements OnInit, OnDestroy {
+
   @Input() query = '';
-  @Input() searching = false;
-  @Input() error = '';
+  @Input() orderCount?: number;
   @Input() fetchedUsers$: Observable<Array<User>>;
   @Output() searchCriteriaChange = new EventEmitter<OrderSearchCriteria>();
   @Output() usersForAutoChange = new EventEmitter<string>();
 
+  activeTab: number = 0;
   selectedUser: User;
-  searchGroup: UntypedFormGroup;
+  searchGroup:FormGroup;
   statusList: Status[] = [];
   userSubscription: Subscription;
 
@@ -103,12 +125,12 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initilizeStatusList();
-    this.searchGroup = new UntypedFormGroup(
+    this.searchGroup = new FormGroup(
       {
-        startDate: new UntypedFormControl(new Date(0), [Validators.required]),
-        endDate: new UntypedFormControl(new Date(), [Validators.required]),
-        orderStatus: new UntypedFormControl('ALL'),
-        orderUser: new UntypedFormControl()
+        startDate: new FormControl(new Date(0), [Validators.required]),
+        endDate: new FormControl(new Date(), [Validators.required]),
+        orderStatus: new FormControl('ALL'),
+        orderUser: new FormControl()
       }
     );
 
@@ -125,7 +147,19 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
         }
 
       });
+
+      this.executeSearch(true);
   }
+
+  tabChange(event: MatTabChangeEvent) {
+      this.activeTab = event.index;
+      if(event.index === 0){
+        this.executeSearch(true);
+      } else {
+        this.executeSearch();
+      }
+  } 
+
 
   displayFn(user) {
     if (user) {
@@ -135,12 +169,24 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  executeSearch() {
-    let orderSearchCriteria: OrderSearchCriteria = {
-      start: this.searchGroup.get('startDate').value.getTime(),
-      end: this.searchGroup.get('endDate').value.getTime(),
-      status: this.searchGroup.get('orderStatus').value,
-      userId: this.searchGroup.get('orderUser')?.value?.uid
+  openOrders(){
+    this.executeSearch(true);
+  }
+
+  executeSearch(open?: boolean) {
+
+    let orderSearchCriteria: OrderSearchCriteria ;
+    if(open){
+      orderSearchCriteria = {
+        status: OrderStatus.OPEN
+      }
+    } else {
+      orderSearchCriteria = {
+        start: this.searchGroup.get('startDate').value.getTime(),
+        end: this.searchGroup.get('endDate').value.getTime(),
+        status: this.searchGroup.get('orderStatus').value,
+        userId: this.searchGroup.get('orderUser')?.value?.uid
+      }
     };
     this.searchCriteriaChange.emit(orderSearchCriteria);
   }

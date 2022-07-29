@@ -12,7 +12,7 @@ import { User } from 'src/app/auth/models/user';
   selector: 'app-order-list-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-  <app-order-search [fetchedUsers$]="fetchedUsers$" (searchCriteriaChange)= "executeQuery($event)" 
+  <app-order-search [fetchedUsers$]="fetchedUsers$" (searchCriteriaChange)= "executeQuery($event)" [orderCount]="orderCount" 
         (usersForAutoChange)="fetchUsersForAuto($event)" >
   </app-order-search>
   
@@ -37,6 +37,7 @@ import { User } from 'src/app/auth/models/user';
 export class OrderListPageComponent {
 
   orders$: Observable<Order[]>;
+  orderCount: number;
   selectedOrderId$: Observable<string>;
   fetchedUsers$: Observable<Array<User>>;
   currentSearchCriteria: OrderSearchCriteria;
@@ -61,6 +62,7 @@ export class OrderListPageComponent {
     this.orderStore.dispatch(new Reset);
     this.orderStore.dispatch(new Load(payload));
     this.orders$ = this.orderStore.select(fromOrderReducer.getOrders);
+    this.orders$.subscribe( orders => this.orderCount = orders.length)
     this.pageDisabledButtons = true;
   }
 

@@ -14,7 +14,6 @@ import 'ag-grid-enterprise';
       <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="cancel()">Cancel</button>
       &nbsp;&nbsp;
       <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="pay()"> Paid</button>
-      <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="newOrders()"> Paid</button>
  </mat-toolbar-row>    
 
   <ag-grid-angular #agGrid *ngIf="orderList && orderList.length > 0"
@@ -31,7 +30,7 @@ import 'ag-grid-enterprise';
           [rowSelection]="'multiple'"
           [getRowNodeId]="getRowNodeId"
           [animateRows]="true"
-          [sideBar] = "true"
+          [sideBar] = "false"
           [pivotColumnGroupTotals]=""
           (gridReady)="onGridReady($event)"
           (selectionChanged)="checkIfEmpty($event)"
@@ -87,7 +86,7 @@ export class OrderListComponent {
       { header: 'Selection', checkboxSelection: true, headerCheckboxSelection: true, 
       pinned: 'left',lockPinned:true,lockVisible: true,
        width: 50, field: 'checkboxBtn'},
-      { headerName: 'Order Date', cellStyle: {'color': 'white', 'min-width': '80px','background-color': 'darkgrey'},  
+      { headerName: 'Order Date', cellStyle: {'color': 'white', 'min-width': '120px','background-color': 'darkgrey'},  
          field: 'orderDate', pinned: 'left',lockPinned:true,lockVisible: true,
           cellRenderer: 'agGroupCellRenderer', valueFormatter: params => this.dateFormatter(params.data.orderDate, true)},
       { headerName: 'Order Details', 
@@ -149,7 +148,7 @@ export class OrderListComponent {
     let str:string;
     if(withTime){
       str = new Date(date).getDate().toString() + '/' + 
-      new Date(date).getMonth().toString() +  '/' + new Date(date).getFullYear().toString() + '-' + new Date(date).getHours().toString() + ':' + new Date(date).getMinutes().toString();
+      new Date(date).getMonth().toString() +  '/' + new Date(date).getFullYear().toString() + '-' + new Date(date).getHours().toString().padStart(2,'0') + ':' + new Date(date).getMinutes().toString().padStart(2,'0');
     } else {
       str = new Date(date).getDate().toString() + '/' + 
       new Date(date).getMonth().toString() +  '/' + new Date(date).getFullYear().toString();
